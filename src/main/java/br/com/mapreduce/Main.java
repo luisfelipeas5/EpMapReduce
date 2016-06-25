@@ -4,9 +4,11 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
 
 public class Main {
+
     public static void main(String[] args){
         try {
-            runLeastSquare(args);
+            String[] dataPath = {Constants.INPUT_DATA_ROOT_PATH, Constants.OUTPUT_DATA_ROOT_PATH};
+            runLeastSquare(dataPath);
         } catch (Exception e) {
             System.out.println("Error executing " + LeastSquareJob.NAME);
             e.printStackTrace();

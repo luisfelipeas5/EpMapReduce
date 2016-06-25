@@ -13,6 +13,7 @@ class LeastSquareJob implements Tool {
     static final String NAME = "LeastSquareJob";
     private static final int RESULT_CODE_FAILED = 0;
     static final int RESULT_CODE_SUCCESS = 1;
+    private Configuration configuration;
 
     public int run(String[] strings) throws Exception {
         //Set params of job inside the Configuration
@@ -35,14 +36,15 @@ class LeastSquareJob implements Tool {
         leastSquareJob.setOutputKeyClass(Text.class);
         leastSquareJob.setOutputValueClass(DoubleWritable.class);
 
-        return leastSquareJob.waitForCompletion(true) ? RESULT_CODE_FAILED : RESULT_CODE_SUCCESS;
+        //return leastSquareJob.waitForCompletion(true) ? RESULT_CODE_FAILED : RESULT_CODE_SUCCESS;
+        return RESULT_CODE_FAILED;
     }
 
     public void setConf(Configuration configuration) {
-
+        this.configuration = configuration;
     }
 
     public Configuration getConf() {
-        return null;
+        return configuration;
     }
 }
