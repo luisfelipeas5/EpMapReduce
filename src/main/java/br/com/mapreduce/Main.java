@@ -17,7 +17,7 @@ public class Main {
         }
     }
 
-    static void printManual(){
+    private static void printManual(){
         //TODO - print command options and explanation
         System.out.println("Command options:");
         System.out.println("\t" + Constants.COMMAND_LEAST_SQUARE + " - " + Constants.COMMAND_EXPLANATION_LEAST_SQUARE);

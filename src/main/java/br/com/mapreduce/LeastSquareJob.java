@@ -11,8 +11,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 
-import java.io.File;
-
 class LeastSquareJob extends Configured implements Tool {
     static final String NAME = "LeastSquareJob";
     private static final int RESULT_CODE_FAILED = 0;
