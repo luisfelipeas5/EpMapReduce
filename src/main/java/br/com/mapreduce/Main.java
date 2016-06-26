@@ -1,5 +1,6 @@
 package br.com.mapreduce;
 
+import br.com.mapreduce.leastsquare.LeastSquareJob;
 import org.apache.hadoop.util.ToolRunner;
 
 public class Main {

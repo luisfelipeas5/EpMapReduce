@@ -1,4 +1,4 @@
-package br.com.mapreduce;
+package br.com.mapreduce.leastsquare;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -11,10 +11,10 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 
-class LeastSquareJob extends Configured implements Tool {
-    static final String NAME = "LeastSquareJob";
+public class LeastSquareJob extends Configured implements Tool {
+    public static final String NAME = "LeastSquareJob";
     private static final int RESULT_CODE_FAILED = 0;
-    static final int RESULT_CODE_SUCCESS = 1;
+    public static final int RESULT_CODE_SUCCESS = 1;
 
     public int run(String[] strings) throws Exception {
         if(strings.length < 3){
