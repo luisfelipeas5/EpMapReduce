@@ -1,6 +1,8 @@
 package br.com.mapreduce;
 
 class Constants {
-    static String INPUT_DATA_ROOT_PATH = "./resources/3anos";
-    static String OUTPUT_DATA_ROOT_PATH = "./resources";
+    //Commands options
+    static final String COMMAND_LEAST_SQUARE = "least";
+    //Commands Explanation
+    static final String COMMAND_EXPLANATION_LEAST_SQUARE = "least square explanation";
 }

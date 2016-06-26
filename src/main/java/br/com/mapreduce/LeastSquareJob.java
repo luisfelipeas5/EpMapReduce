@@ -1,7 +1,9 @@
 package br.com.mapreduce;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.shell.CommandFormat;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -9,13 +11,20 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 
-class LeastSquareJob implements Tool {
+import java.io.File;
+
+class LeastSquareJob extends Configured implements Tool {
     static final String NAME = "LeastSquareJob";
     private static final int RESULT_CODE_FAILED = 0;
     static final int RESULT_CODE_SUCCESS = 1;
-    private Configuration configuration;
 
     public int run(String[] strings) throws Exception {
+        if(strings.length < 3){
+            System.out.println("");
+            //arguments are not enough, input and outputs paths must be passed in the firsts parameters
+            throw new CommandFormat.NotEnoughArgumentsException(2, strings.length);
+        }
+
         //Set params of job inside the Configuration
         Configuration configuration = getConf();
 
@@ -23,11 +32,11 @@ class LeastSquareJob implements Tool {
         leastSquareJob.setJarByClass(getClass());
         leastSquareJob.setJobName(getClass().getSimpleName());
 
-
-        String inputPath = strings[0];
+        //Add the path of the files
+        String inputPath = strings[1];
         FileInputFormat.addInputPath(leastSquareJob, new Path(inputPath));
-        String outputPath = strings[1];
-        FileOutputFormat.setOutputPath(leastSquareJob, new Path(outputPath));
+        String outputPath = strings[2];
+        FileOutputFormat.setOutputPath(leastSquareJob,  new Path(outputPath));
 
         leastSquareJob.setMapperClass(LeastSquareMapper.class);
         leastSquareJob.setCombinerClass(LeastSquareReducer.class);
@@ -36,15 +45,10 @@ class LeastSquareJob implements Tool {
         leastSquareJob.setOutputKeyClass(Text.class);
         leastSquareJob.setOutputValueClass(DoubleWritable.class);
 
-        //return leastSquareJob.waitForCompletion(true) ? RESULT_CODE_FAILED : RESULT_CODE_SUCCESS;
+        boolean completed = leastSquareJob.waitForCompletion(true);
+        if(completed){
+            return RESULT_CODE_SUCCESS;
+        }
         return RESULT_CODE_FAILED;
-    }
-
-    public void setConf(Configuration configuration) {
-        this.configuration = configuration;
-    }
-
-    public Configuration getConf() {
-        return configuration;
     }
 }
