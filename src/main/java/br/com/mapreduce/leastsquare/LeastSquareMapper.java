@@ -7,17 +7,23 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 class LeastSquareMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        System.out.println("key = " + key.toString());
-        System.out.println(value.toString());
-
-        //TODO map as KEY = FIELD
-        int tokenIndex = 0;
-        DoubleWritable tokenValue = new DoubleWritable();
-        Text tokenKey = new Text(Constants.FIELDS[tokenIndex]);
-        context.write(tokenKey, tokenValue);
+        StringTokenizer stringTokenizer = new StringTokenizer(value.toString());
+        for (int tokenIndex = 0; tokenIndex < stringTokenizer.countTokens(); tokenIndex++) {
+            String token = stringTokenizer.nextToken();
+            try {
+                double parseDouble = Double.parseDouble(token);
+                DoubleWritable tokenValue = new DoubleWritable(parseDouble);
+                Text tokenKey = new Text(Constants.FIELDS[tokenIndex]);
+                //System.out.println("<" + tokenKey + ", " + tokenValue + ">");
+                context.write(tokenKey, tokenValue);
+            } catch (NumberFormatException numberFormatException) {
+                return;
+            }
+        }
     }
 }

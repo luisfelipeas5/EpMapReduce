@@ -6,9 +6,36 @@ public class Constants {
     //Commands Explanation
     static final String COMMAND_EXPLANATION_LEAST_SQUARE = "least square explanation";
 
-    //FIELDs
+    //FIELDs on the Set of Weather Data
     public static final String[] FIELDS = {
         "STN---",
-        "WBAN"
+        "WBAN",
+        "YEARMODA",
+        "TEMP",
+        "DEWP",
+        "SLP",
+        "STP",
+        "VISIB",
+        "WDSP",
+        "MXSPD",
+        "GUST",
+        "MAX",
+        "MIN",
+        "PRCP",
+        "SNDP",
+        "FRSHTTYEARMODA",
+        "TEMP",
+        "DEWP",
+        "SLP",
+        "STP",
+        "VISIB",
+        "WDSP",
+        "MXSPD",
+        "GUST",
+        "MAX",
+        "MIN",
+        "PRCP",
+        "SNDP",
+        "FRSHTT"
     };
 }
