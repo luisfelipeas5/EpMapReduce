@@ -32,6 +32,9 @@ public class Main {
             runCode = ToolRunner.run(leastSquareJob, args);
             if(runCode == LeastSquareJob.RESULT_CODE_SUCCESS) {
                 System.out.println(LeastSquareJob.NAME + " success :)");
+                //TODO Load file
+                //TODO format data
+                //TODO return
             } else {
                 System.out.println(LeastSquareJob.NAME + " failed :(");
             }

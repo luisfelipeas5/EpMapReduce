@@ -9,7 +9,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-class LeastSquareMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+class StatisticMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         StringTokenizer stringTokenizer = new StringTokenizer(value.toString());

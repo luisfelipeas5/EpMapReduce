@@ -19,11 +19,12 @@ public class LeastSquareJob extends Configured implements Tool {
     public static final String NAME = "LeastSquareJob";
     private static final int RESULT_CODE_FAILED = 0;
     public static final int RESULT_CODE_SUCCESS = 1;
+    static final String CONF_NAME_MEASUREMENT = "CONF_NAME_MEASUREMENT";
     private String mDateGrepTempDir;
     private String mStationGrepTempDir;
 
     public int run(String[] args) throws Exception {
-        if(args.length < 6){
+        if(args.length < 7){
             System.out.println(Constants.COMMAND_ARGUMENTS_LEAST_SQUARE);
             //arguments are not enough, input and outputs paths must be passed in the firsts parameters
             throw new CommandFormat.NotEnoughArgumentsException(6, args.length);
@@ -33,9 +34,11 @@ public class LeastSquareJob extends Configured implements Tool {
         String stationNumber = args[3];
         String dateBegin = args[4];
         String dateEnd = args[5];
+        String measurement = args[6];
 
         //Set params of job inside the Configuration
         Configuration configuration = getConf();
+        configuration.set(CONF_NAME_MEASUREMENT, measurement);
 
         //If the user put a work station filter as parameter, we have to run the job to filter this
         if(stationNumber != null && !stationNumber.equals("") ) {
@@ -56,7 +59,7 @@ public class LeastSquareJob extends Configured implements Tool {
         FileInputFormat.setInputPaths(leastSquareJob, new Path(inputPath));
         FileOutputFormat.setOutputPath(leastSquareJob, new Path(outputPath));
 
-        leastSquareJob.setMapperClass(LeastSquareMapper.class);
+        leastSquareJob.setMapperClass(StatisticMapper.class);
         leastSquareJob.setCombinerClass(LeastSquareReducer.class);
         leastSquareJob.setReducerClass(LeastSquareReducer.class);
 
