@@ -21,7 +21,8 @@ public class Main {
     private static void printManual(){
         //TODO - print command options and explanation
         System.out.println("Command options:");
-        System.out.println("\t" + Constants.COMMAND_LEAST_SQUARE + " - " + Constants.COMMAND_EXPLANATION_LEAST_SQUARE);
+        System.out.println("\t" + Constants.COMMAND_LEAST_SQUARE + " - " + "\n\t" + Constants.COMMAND_ARGUMENTS_LEAST_SQUARE +
+                "\n\t" + Constants.COMMAND_EXPLANATION_LEAST_SQUARE);
     }
 
     private static void runLeastSquare(String[] args){
@@ -31,6 +32,9 @@ public class Main {
             runCode = ToolRunner.run(leastSquareJob, args);
             if(runCode == LeastSquareJob.RESULT_CODE_SUCCESS) {
                 System.out.println(LeastSquareJob.NAME + " success :)");
+                //TODO Load file
+                //TODO format data
+                //TODO return
             } else {
                 System.out.println(LeastSquareJob.NAME + " failed :(");
             }
