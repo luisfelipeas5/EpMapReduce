@@ -11,6 +11,11 @@
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
+.idea/compiler.xml
+.idea/misc.xml
+.idea/copyright/
+.idea/modules.xml
+*.iml
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
