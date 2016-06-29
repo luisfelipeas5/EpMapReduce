@@ -1,6 +1,5 @@
-package br.com.mapreduce.leastsquare;
+package br.com.mapreduce;
 
-import br.com.mapreduce.Constants;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -9,7 +8,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-class StatisticMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
+public class StatisticMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         StringTokenizer stringTokenizer = new StringTokenizer(value.toString());
@@ -19,7 +18,7 @@ class StatisticMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
                 double parseDouble = Double.parseDouble(token);
                 DoubleWritable tokenValue = new DoubleWritable(parseDouble);
                 Text tokenKey = new Text(Constants.FIELDS[tokenIndex]);
-                //System.out.println("<" + tokenKey + ", " + tokenValue + ">");
+                System.out.println("<" + tokenKey + ", " + tokenValue + ">");
                 context.write(tokenKey, tokenValue);
             } catch (NumberFormatException numberFormatException) {
                 return;

@@ -1,7 +1,7 @@
-package br.com.mapreduce.leastsquare;
+package br.com.mapreduce.stddeviation;
 
-import br.com.mapreduce.Constants;
 import br.com.mapreduce.StatisticMapper;
+import br.com.mapreduce.Constants;
 import br.com.mapreduce.dategrep.DateGrepJob;
 import br.com.mapreduce.stationgrep.StationGrepJob;
 import org.apache.hadoop.conf.Configuration;
@@ -16,8 +16,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-public class LeastSquareJob extends Configured implements Tool {
-    public static final String NAME = "LeastSquareJob";
+public class StdDeviationJob extends Configured implements Tool {
+    public static final String NAME = "Standard Deviation";
     private static final int RESULT_CODE_FAILED = 0;
     public static final int RESULT_CODE_SUCCESS = 1;
     static final String CONF_NAME_MEASUREMENT = "CONF_NAME_MEASUREMENT";
@@ -25,8 +25,8 @@ public class LeastSquareJob extends Configured implements Tool {
     private String mStationGrepTempDir;
 
     public int run(String[] args) throws Exception {
-        if(args.length < 7){
-            System.out.println(Constants.COMMAND_ARGUMENTS_LEAST_SQUARE);
+        if(args.length < 7) {
+            System.out.println(Constants.COMMAND_ARGUMENTS_STD_DEVIATION);
             //arguments are not enough, input and outputs paths must be passed in the firsts parameters
             throw new CommandFormat.NotEnoughArgumentsException(6, args.length);
         }
@@ -53,22 +53,20 @@ public class LeastSquareJob extends Configured implements Tool {
             inputPath = runDateGrepJob(inputPath, dateBegin, dateEnd);
         }
 
-        Job leastSquareJob = new Job(configuration);
-        leastSquareJob.setJarByClass(getClass());
-        leastSquareJob.setJobName(NAME);
+        Job stdDevJob = new Job(configuration);
+        stdDevJob.setJarByClass(getClass());
+        stdDevJob.setJobName(NAME);
 
-        FileInputFormat.setInputPaths(leastSquareJob, new Path(inputPath));
-        FileOutputFormat.setOutputPath(leastSquareJob, new Path(outputPath));
+        FileInputFormat.setInputPaths(stdDevJob, new Path(inputPath));
+        FileOutputFormat.setOutputPath(stdDevJob, new Path(outputPath));
 
-        leastSquareJob.setMapperClass(StatisticMapper.class);
-        leastSquareJob.setCombinerClass(LeastSquareReducer.class);
-        leastSquareJob.setReducerClass(LeastSquareReducer.class);
+        stdDevJob.setMapperClass(StatisticMapper.class);
+        //stdDevJob.setCombinerClass(MeanReducer.class);
+        //stdDevJob.setReducerClass(MeanReducer.class);
 
-        leastSquareJob.setOutputKeyClass(Text.class);
-        leastSquareJob.setOutputValueClass(DoubleWritable.class);
-
-        boolean completed = leastSquareJob.waitForCompletion(true);
-
+        stdDevJob.setOutputKeyClass(Text.class);
+        stdDevJob.setOutputValueClass(DoubleWritable.class);
+        boolean completed = stdDevJob.waitForCompletion(true);
         /*
         FileSystem.get(getConf()).delete(new Path(mDateGrepTempDir), true);
         FileSystem.get(getConf()).delete(new Path(mStationGrepTempDir), true);
@@ -103,7 +101,6 @@ public class LeastSquareJob extends Configured implements Tool {
 
     private String runStationGrepJob(String inputPath, String stationNumber) {
         StationGrepJob stationGrepJob = new StationGrepJob();
-
         mStationGrepTempDir = "station-temp-" + System.currentTimeMillis();
         int runCode;
         try {
