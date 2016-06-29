@@ -1,6 +1,5 @@
-package br.com.mapreduce.leastsquare;
+package br.com.mapreduce;
 
-import br.com.mapreduce.Constants;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;

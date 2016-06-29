@@ -27,14 +27,14 @@ public class Main {
 
     private static void runLeastSquare(String[] args){
         LeastSquareJob leastSquareJob = new LeastSquareJob();
-        int runCode;
         try {
-            runCode = ToolRunner.run(leastSquareJob, args);
+            int runCode = ToolRunner.run(leastSquareJob, args);
             if(runCode == LeastSquareJob.RESULT_CODE_SUCCESS) {
                 System.out.println(LeastSquareJob.NAME + " success :)");
-                //TODO Load file
-                //TODO format data
-                //TODO return
+
+                double x = Double.parseDouble(args[args.length - 1]);
+                double leastSquare = leastSquareJob.getLeastSquare(x);
+                System.out.println("least square = " + leastSquare);
             } else {
                 System.out.println(LeastSquareJob.NAME + " failed :(");
             }

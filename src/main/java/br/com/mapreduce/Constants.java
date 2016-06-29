@@ -6,7 +6,7 @@ public class Constants {
     //Commands Explanation
     static final String COMMAND_EXPLANATION_LEAST_SQUARE = "least square explanation";
     //Commands arguments
-    public static final String COMMAND_ARGUMENTS_LEAST_SQUARE = "least <input path> <output path> <work station number> <start date (yyyyMMdd)> <end date (yyyyMMdd)> <measure>";
+    public static final String COMMAND_ARGUMENTS_LEAST_SQUARE = "least <input path> <output path> <work station number> <start date (yyyyMMdd)> <end date (yyyyMMdd)> <measure> <x>";
     public static final String COMMAND_ARGUMENTS_STATION_GREP = "station <input path> <output path> <work station number>";
     public static final String COMMAND_ARGUMENTS_DATE_GREP = "date <input path> <output path> <start date (yyyyMMdd)> <end date (yyyyMMdd)>";
 
