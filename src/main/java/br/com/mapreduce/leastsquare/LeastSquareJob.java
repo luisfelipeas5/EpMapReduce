@@ -3,6 +3,7 @@ package br.com.mapreduce.leastsquare;
 import br.com.mapreduce.Constants;
 import br.com.mapreduce.Utils;
 import br.com.mapreduce.dategrep.DateGrepJob;
+import br.com.mapreduce.mean.MeanJob;
 import br.com.mapreduce.stationgrep.StationGrepJob;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -64,10 +65,13 @@ public class LeastSquareJob extends Configured implements Tool {
         //Set params of job inside the Configuration
         Configuration configuration = getConf();
         configuration.set(CONF_NAME_MEASUREMENT, measurement);
-        long xMean = getMean(inputPath, Constants.FIELDS[2]);
+        long xMean = (long) getMean(inputPath, Constants.FIELDS[2]);
         configuration.setLong(CONF_NAME_MEAN_X, xMean);
-        long yMean = getMean(inputPath, measurement);
+        long yMean = (long) getMean(inputPath, measurement);
         configuration.setLong(CONF_NAME_MEAN_Y, yMean);
+        if(xMean != 0 || yMean != 0) {
+            return RESULT_CODE_SUCCESS;
+        }
 
         Job leastSquareJob = new Job(configuration);
         leastSquareJob.setJarByClass(getClass());
@@ -109,12 +113,26 @@ public class LeastSquareJob extends Configured implements Tool {
         double yMean = getConf().getDouble(LeastSquareJob.CONF_NAME_MEAN_Y, 0);
         double a = yMean - this.b * xMean;
         return a + this.b * x;
+
     }
 
-    private int getMean(String inputPath, String field) {
-        mMeanTempDir = "mean-temp-" + System.currentTimeMillis();
-        //TODO run MeanJob
-        return 1;
+    private double getMean(String inputPath, String measurement) {
+        try {
+            MeanJob meanJob = new MeanJob();
+            mMeanTempDir = "mean-temp-" + System.currentTimeMillis();
+            int runCode = ToolRunner.run(meanJob, new String[]{"", inputPath, mMeanTempDir, "", "", "", measurement});
+            if(runCode == MeanJob.RESULT_CODE_SUCCESS) {
+                double mean = meanJob.getMean();
+                System.out.println(MeanJob.NAME + " success :) = " + mean);
+                return mean;
+            } else {
+                System.out.println(MeanJob.NAME + " failed :(");
+            }
+        } catch (Exception e) {
+            System.out.println("Error executing " + MeanJob.NAME);
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     private String runDateGrepJob(String inputPath, String dateBegin, String dateEnd) {
