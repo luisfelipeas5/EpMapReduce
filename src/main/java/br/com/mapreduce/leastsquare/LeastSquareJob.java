@@ -1,7 +1,7 @@
 package br.com.mapreduce.leastsquare;
 
 import br.com.mapreduce.Constants;
-import br.com.mapreduce.StatisticMapper;
+import br.com.mapreduce.Utils;
 import br.com.mapreduce.dategrep.DateGrepJob;
 import br.com.mapreduce.stationgrep.StationGrepJob;
 import org.apache.hadoop.conf.Configuration;
@@ -16,19 +16,31 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import java.util.Scanner;
+
 public class LeastSquareJob extends Configured implements Tool {
+
     public static final String NAME = "LeastSquareJob";
+
     private static final int RESULT_CODE_FAILED = 0;
     public static final int RESULT_CODE_SUCCESS = 1;
+
     static final String CONF_NAME_MEASUREMENT = "CONF_NAME_MEASUREMENT";
+    static final String CONF_NAME_MEAN_X = "CONF_NAME_MEAN_X";
+    static final String CONF_NAME_MEAN_Y = "CONF_NAME_MEAN_Y";
+
     private String mDateGrepTempDir;
     private String mStationGrepTempDir;
+    private String mMeanTempDir;
+
+    private double b;
 
     public int run(String[] args) throws Exception {
-        if(args.length < 7){
+        int argsExcepted = 8;
+        if(args.length < argsExcepted){
             System.out.println(Constants.COMMAND_ARGUMENTS_LEAST_SQUARE);
             //arguments are not enough, input and outputs paths must be passed in the firsts parameters
-            throw new CommandFormat.NotEnoughArgumentsException(6, args.length);
+            throw new CommandFormat.NotEnoughArgumentsException(argsExcepted, args.length);
         }
         String inputPath = args[1];
         String outputPath = args[2];
@@ -36,10 +48,6 @@ public class LeastSquareJob extends Configured implements Tool {
         String dateBegin = args[4];
         String dateEnd = args[5];
         String measurement = args[6];
-
-        //Set params of job inside the Configuration
-        Configuration configuration = getConf();
-        configuration.set(CONF_NAME_MEASUREMENT, measurement);
 
         //If the user put a work station filter as parameter, we have to run the job to filter this
         if(stationNumber != null && !stationNumber.equals("") ) {
@@ -53,6 +61,14 @@ public class LeastSquareJob extends Configured implements Tool {
             inputPath = runDateGrepJob(inputPath, dateBegin, dateEnd);
         }
 
+        //Set params of job inside the Configuration
+        Configuration configuration = getConf();
+        configuration.set(CONF_NAME_MEASUREMENT, measurement);
+        long xMean = getMean(inputPath, Constants.FIELDS[2]);
+        configuration.setLong(CONF_NAME_MEAN_X, xMean);
+        long yMean = getMean(inputPath, measurement);
+        configuration.setLong(CONF_NAME_MEAN_Y, yMean);
+
         Job leastSquareJob = new Job(configuration);
         leastSquareJob.setJarByClass(getClass());
         leastSquareJob.setJobName(NAME);
@@ -60,24 +76,45 @@ public class LeastSquareJob extends Configured implements Tool {
         FileInputFormat.setInputPaths(leastSquareJob, new Path(inputPath));
         FileOutputFormat.setOutputPath(leastSquareJob, new Path(outputPath));
 
-        leastSquareJob.setMapperClass(StatisticMapper.class);
-        leastSquareJob.setCombinerClass(LeastSquareReducer.class);
+        leastSquareJob.setMapperClass(LeastSquareMapper.class);
         leastSquareJob.setReducerClass(LeastSquareReducer.class);
+
+        leastSquareJob.setMapOutputKeyClass(DoubleWritable.class);
+        leastSquareJob.setMapOutputValueClass(DoubleWritable.class);
 
         leastSquareJob.setOutputKeyClass(Text.class);
         leastSquareJob.setOutputValueClass(DoubleWritable.class);
 
         boolean completed = leastSquareJob.waitForCompletion(true);
-
         /*
         FileSystem.get(getConf()).delete(new Path(mDateGrepTempDir), true);
         FileSystem.get(getConf()).delete(new Path(mStationGrepTempDir), true);
         */
 
         if(completed){
+            Scanner scanner = Utils.getScanner(outputPath);
+            String line = scanner.nextLine();
+            while (scanner.hasNext()){
+                line = scanner.nextLine();
+            }
+            this.b = Double.parseDouble(line.trim());
+
             return RESULT_CODE_SUCCESS;
         }
         return RESULT_CODE_FAILED;
+    }
+
+    public double getLeastSquare(double x) {
+        double xMean = getConf().getDouble(LeastSquareJob.CONF_NAME_MEAN_X, 0);
+        double yMean = getConf().getDouble(LeastSquareJob.CONF_NAME_MEAN_Y, 0);
+        double a = yMean - this.b * xMean;
+        return a + this.b * x;
+    }
+
+    private int getMean(String inputPath, String field) {
+        mMeanTempDir = "mean-temp-" + System.currentTimeMillis();
+        //TODO run MeanJob
+        return 1;
     }
 
     private String runDateGrepJob(String inputPath, String dateBegin, String dateEnd) {

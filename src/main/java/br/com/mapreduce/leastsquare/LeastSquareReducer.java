@@ -6,17 +6,18 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
-class LeastSquareReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
-    private DoubleWritable result = new DoubleWritable();
+class LeastSquareReducer extends Reducer<DoubleWritable, DoubleWritable, Text, DoubleWritable> {
+    private DoubleWritable b = new DoubleWritable(0);
     @Override
-    protected void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
-        String measurement = context.getConfiguration().get(LeastSquareJob.CONF_NAME_MEASUREMENT);
-        if (key.equals( new Text(measurement))) {
-            for (DoubleWritable value : values) {
-                //TODO least square caculation
-                System.out.println(value.toString());
-            }
-            context.write(key, result);
+    protected void reduce(DoubleWritable x, Iterable<DoubleWritable> ys, Context context) throws IOException, InterruptedException {
+        double xMean = context.getConfiguration().getDouble(LeastSquareJob.CONF_NAME_MEAN_X, 0);
+        double yMean = context.getConfiguration().getDouble(LeastSquareJob.CONF_NAME_MEAN_Y, 0);
+        for (DoubleWritable y : ys) {
+            double numerator = x.get() * (y.get() - yMean);
+            double denominator = x.get() * (x.get() - xMean);
+            b.set( b.get() + (numerator/denominator) );
         }
+        context.write(new Text(""), b);
+        System.out.println("b = " + b.get());
     }
 }

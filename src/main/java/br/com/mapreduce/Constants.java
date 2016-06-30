@@ -9,7 +9,7 @@ public class Constants {
     static final String COMMAND_EXPLANATION_MEAN = "mean explanation";
 
     //Commands arguments
-    public static final String COMMAND_ARGUMENTS_LEAST_SQUARE = "least <input path> <output path> <work station number> <start date (yyyyMMdd)> <end date (yyyyMMdd)> <measure>";
+    public static final String COMMAND_ARGUMENTS_LEAST_SQUARE = "least <input path> <output path> <work station number> <start date (yyyyMMdd)> <end date (yyyyMMdd)> <measure> <x>";
     public static final String COMMAND_ARGUMENTS_STATION_GREP = "station <input path> <output path> <work station number>";
     public static final String COMMAND_ARGUMENTS_DATE_GREP = "date <input path> <output path> <start date (yyyyMMdd)> <end date (yyyyMMdd)>";
     public static final String COMMAND_ARGUMENTS_MEAN = "mean <input path> <output path> <work station number> <start date (yyyyMMdd)> <end date (yyyyMMdd)> <measure>";
