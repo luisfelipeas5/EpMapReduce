@@ -2,6 +2,7 @@ package br.com.mapreduce.stddeviation;
 
 import br.com.mapreduce.StatisticMapper;
 import br.com.mapreduce.Constants;
+import br.com.mapreduce.Utils;
 import br.com.mapreduce.dategrep.DateGrepJob;
 import br.com.mapreduce.stationgrep.StationGrepJob;
 import org.apache.hadoop.conf.Configuration;
@@ -16,19 +17,27 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import java.util.Scanner;
+
 public class StdDeviationJob extends Configured implements Tool {
     public static final String NAME = "Standard Deviation";
     private static final int RESULT_CODE_FAILED = 0;
-    public static final int RESULT_CODE_SUCCESS = 1;
+    private static final int RESULT_CODE_SUCCESS = 1;
     static final String CONF_NAME_MEASUREMENT = "CONF_NAME_MEASUREMENT";
     private String mDateGrepTempDir;
     private String mStationGrepTempDir;
+
+    private double standardDeviation;
+
+    public double getStandardDeviation() {
+        return standardDeviation;
+    }
 
     public int run(String[] args) throws Exception {
         if(args.length < 7) {
             System.out.println(Constants.COMMAND_ARGUMENTS_STD_DEVIATION);
             //arguments are not enough, input and outputs paths must be passed in the firsts parameters
-            throw new CommandFormat.NotEnoughArgumentsException(6, args.length);
+            throw new CommandFormat.NotEnoughArgumentsException(7, args.length);
         }
         String inputPath = args[1];
         String outputPath = args[2];
@@ -61,8 +70,7 @@ public class StdDeviationJob extends Configured implements Tool {
         FileOutputFormat.setOutputPath(stdDevJob, new Path(outputPath));
 
         stdDevJob.setMapperClass(StatisticMapper.class);
-        //stdDevJob.setCombinerClass(MeanReducer.class);
-        //stdDevJob.setReducerClass(MeanReducer.class);
+        stdDevJob.setReducerClass(StdDeviationReducer.class);
 
         stdDevJob.setOutputKeyClass(Text.class);
         stdDevJob.setOutputValueClass(DoubleWritable.class);
@@ -73,6 +81,9 @@ public class StdDeviationJob extends Configured implements Tool {
         */
 
         if(completed){
+            Scanner scanner = Utils.getScanner(outputPath);
+            scanner.next();
+            this.standardDeviation = Double.parseDouble(scanner.next());
             return RESULT_CODE_SUCCESS;
         }
         return RESULT_CODE_FAILED;
