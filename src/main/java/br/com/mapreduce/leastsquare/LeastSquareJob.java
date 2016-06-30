@@ -158,7 +158,6 @@ public class LeastSquareJob extends Configured implements Tool {
 
     private String runStationGrepJob(String inputPath, String stationNumber) {
         StationGrepJob stationGrepJob = new StationGrepJob();
-
         mStationGrepTempDir = "station-temp-" + System.currentTimeMillis();
         int runCode;
         try {
