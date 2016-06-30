@@ -2,6 +2,7 @@ package br.com.mapreduce.mean;
 
 import br.com.mapreduce.StatisticMapper;
 import br.com.mapreduce.Constants;
+import br.com.mapreduce.Utils;
 import br.com.mapreduce.dategrep.DateGrepJob;
 import br.com.mapreduce.stationgrep.StationGrepJob;
 import org.apache.hadoop.conf.Configuration;
@@ -16,6 +17,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
+import java.util.Scanner;
+
 public class MeanJob extends Configured implements Tool{
     public static final String NAME = "Mean";
     private static final int RESULT_CODE_FAILED = 0;
@@ -23,6 +26,8 @@ public class MeanJob extends Configured implements Tool{
     static final String CONF_NAME_MEASUREMENT = "CONF_NAME_MEASUREMENT";
     private String mDateGrepTempDir;
     private String mStationGrepTempDir;
+
+    private double mean;
 
     public int run(String[] args) throws Exception {
         if(args.length < 7){
@@ -73,9 +78,16 @@ public class MeanJob extends Configured implements Tool{
         */
 
         if(completed){
+            Scanner scanner = Utils.getScanner(outputPath);
+            scanner.next();
+            this.mean = Double.parseDouble(scanner.next());
             return RESULT_CODE_SUCCESS;
         }
         return RESULT_CODE_FAILED;
+    }
+
+    public double getMean() {
+        return this.mean;
     }
 
     private String runDateGrepJob(String inputPath, String dateBegin, String dateEnd) {
