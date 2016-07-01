@@ -4,11 +4,13 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Scanner;
 import java.util.Map;
 import java.util.HashMap;
+
+import java.io.IOException;
+import java.util.zip.GZIPInputStream;
 
 public class Utils {
     private static Map<String, Double> dadosInvalidos;
@@ -36,6 +38,25 @@ public class Utils {
 
     public static double getInvalidData(String abbreviation) {
         return dadosInvalidos.get(abbreviation);
+    }
+
+    public static void gunzip (String inputPath, String outputPath) {
+        byte[] buffer = new byte[1024];
+        try {
+            GZIPInputStream gzis = new GZIPInputStream(new FileInputStream(inputPath));
+            FileOutputStream out = new FileOutputStream(outputPath);
+            int len;
+            while ((len = gzis.read(buffer)) > 0) {
+                out.write(buffer,0,len);
+            }
+            gzis.close();
+            out.close();
+            File file = new File(inputPath);
+            file.delete();
+        }
+        catch (IOException i) {
+            i.printStackTrace();
+        }
     }
 
 }

@@ -6,9 +6,9 @@ public class Constants {
     static final String COMMAND_MEAN = "mean";
     static final String COMMAND_STD_DEVIATION = "stddev";
     //Commands Explanation
-    static final String COMMAND_EXPLANATION_LEAST_SQUARE = "least square explanation";
-    static final String COMMAND_EXPLANATION_MEAN = "mean explanation";
-    static final String COMMAND_EXPLATION_STD_DEVIATION = "standart deviation";
+    static final String COMMAND_EXPLANATION_LEAST_SQUARE = "aplica o método dos mínimos quadrados em um conjunto de dados e inteiro x. O conjunto de dados é limitado por uma medição <measure> que assume um dos campos do arquivo de entrada como TEMP, WSPD e etc; por um período de tempo definido por <start date (yyyyMMdd)> <end date (yyyyMMdd)>, que pode assumir por exemplo 19300201, que siginifica 01 de fevereiro de 1930; e por uma estação de medição que é um inteiro. A inteiro x é o ponto em que se quer realizar a projeção dos dados que será o retorno do job.";
+    static final String COMMAND_EXPLANATION_MEAN = "aplica a média do conjunto de dados. O conjunto de dados é limitado por uma medição <measure> que assume um dos campos do arquivo de entrada como TEMP, WSPD e etc; por um período de tempo definido por <start date (yyyyMMdd)> <end date (yyyyMMdd)>, que pode assumir por exemplo 19300201, que siginifica 01 de fevereiro de 1930; e por uma estação de medição que é um inteiro.";
+    static final String COMMAND_EXPLANATION_STD_DEVIATION = "aplica o desvio padrão do conjunto de dados. O conjunto de dados é limitado por uma medição <measure> que assume um dos campos do arquivo de entrada como TEMP, WSPD e etc; por um período de tempo definido por <start date (yyyyMMdd)> <end date (yyyyMMdd)>, que pode assumir por exemplo 19300201, que siginifica 01 de fevereiro de 1930; e por uma estação de medição que é um inteiro.";
 
     //Commands arguments
     public static final String COMMAND_ARGUMENTS_LEAST_SQUARE = "least <input path> <output path> <work station number> <start date (yyyyMMdd)> <end date (yyyyMMdd)> <measure> <x>";
