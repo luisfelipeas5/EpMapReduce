@@ -19,7 +19,9 @@ public class StatisticMapper extends Mapper<LongWritable, Text, Text, DoubleWrit
                 DoubleWritable tokenValue = new DoubleWritable(parseDouble);
                 Text tokenKey = new Text(Constants.FIELDS[tokenIndex]);
                 System.out.println("<" + tokenKey + ", " + tokenValue + ">");
-                context.write(tokenKey, tokenValue);
+                if (Utils.getInvalidData(tokenKey.toString()) != parseDouble) {
+                    context.write(tokenKey, tokenValue);
+                }
             } catch (NumberFormatException numberFormatException) {
                 return;
             }

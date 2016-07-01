@@ -2,6 +2,7 @@ package br.com.mapreduce;
 
 import br.com.mapreduce.leastsquare.LeastSquareJob;
 import br.com.mapreduce.mean.MeanJob;
+import br.com.mapreduce.stddeviation.StdDeviationJob;
 import org.apache.hadoop.util.ToolRunner;
 
 public class Main {
@@ -13,7 +14,11 @@ public class Main {
             }
             else if (command.equals(Constants.COMMAND_MEAN)) {
                 runMean(args);
-            }else { //When the first arguments doesn't match with any command option
+            }
+            else if (command.equals(Constants.COMMAND_STD_DEVIATION)) {
+                runStandardDeviation(args);
+            }
+            else { //When the first arguments doesn't match with any command option
                 printManual();
             }
         }
@@ -29,6 +34,24 @@ public class Main {
                 "\n\t" + Constants.COMMAND_EXPLANATION_LEAST_SQUARE);
         System.out.println("\t" +Constants.COMMAND_MEAN + " - " +"\n\t" +Constants.COMMAND_ARGUMENTS_MEAN +
                 "\n\t" +Constants.COMMAND_EXPLANATION_MEAN);
+        System.out.println("\t" +Constants.COMMAND_STD_DEVIATION +" - " +"\n\t" +Constants.COMMAND_ARGUMENTS_STD_DEVIATION +
+                "\n\t" +Constants.COMMAND_EXPLATION_STD_DEVIATION);
+    }
+
+    private static void runStandardDeviation(String args[]) {
+        StdDeviationJob stdDeviationJob = new StdDeviationJob();
+        try {
+            int runCode = ToolRunner.run(stdDeviationJob, args);
+            if(runCode == LeastSquareJob.RESULT_CODE_SUCCESS) {
+                System.out.println(StdDeviationJob.NAME + " success :)");
+
+                double stdDeviation = stdDeviationJob.getStandardDeviation();
+                System.out.println("standard deviation = " + stdDeviation);
+            }
+        } catch (Exception e) {
+            System.out.println("Error executing " + LeastSquareJob.NAME);
+            e.printStackTrace();
+        }
     }
 
     private static void runLeastSquare(String[] args){
@@ -56,9 +79,8 @@ public class Main {
             int runCode = ToolRunner.run(meanJob, args);
             if(runCode == MeanJob.RESULT_CODE_SUCCESS) {
                 System.out.println(MeanJob.NAME + " success :)");
-                //TODO Load file
-                //TODO format data
-                //TODO return
+                double mean = meanJob.getMean();
+                System.out.println("mean = " + mean);
             } else {
                 System.out.println(MeanJob.NAME + " failed :(");
             }

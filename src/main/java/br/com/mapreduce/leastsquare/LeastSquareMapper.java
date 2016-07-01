@@ -1,6 +1,7 @@
 package br.com.mapreduce.leastsquare;
 
 import br.com.mapreduce.Constants;
+import br.com.mapreduce.Utils;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -27,13 +28,15 @@ class LeastSquareMapper extends Mapper<LongWritable, Text, DoubleWritable, Doubl
             }
 
             double dataLong = Double.parseDouble(tokens[2]);
-            DoubleWritable data = new DoubleWritable(dataLong);
+            DoubleWritable date = new DoubleWritable(dataLong);
 
             double measureLong = Double.parseDouble(tokens[measurementTokenIndex]);
             DoubleWritable measure = new DoubleWritable(measureLong);
 
-            context.write(data, measure);
-            System.out.println("<" + data + ", " + measure + ">");
+            if (Utils.getInvalidData(measurement) != dataLong) {
+                context.write(date, measure);
+            }
+            System.out.println("<" + date + ", " + measure + ">");
         }
     }
 }
