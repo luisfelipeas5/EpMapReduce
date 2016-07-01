@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args){
         if(args.length > 0) {
             String command = args[0];
-            File inputRootFolder = new File(args[1]);
+            /*File inputRootFolder = new File(args[1]);
             String[] listFiles = inputRootFolder.list();
             for (String folderName: listFiles) {
                 File folder = new File(args[1]+File.separator+folderName);
@@ -28,7 +28,7 @@ public class Main {
                         }
                     }
                 }
-            }
+            }*/
             args[1] = args[1]+File.separator+"*"+File.separator+"*";
             if (command.equals(Constants.COMMAND_LEAST_SQUARE)) {
                 runLeastSquare(args);
