@@ -1,4 +1,4 @@
-package br.com.mapreduce.leastsquare;
+package br.com.mapreduce.mean;
 
 import br.com.mapreduce.Constants;
 import br.com.mapreduce.Utils;
@@ -9,10 +9,11 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
 
-class LeastSquareMapper extends Mapper<LongWritable, Text, DoubleWritable, DoubleWritable> {
+public class MeanMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
     @Override
+
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        String measurement = context.getConfiguration().get(LeastSquareJob.CONF_NAME_MEASUREMENT);
+        String measurement = context.getConfiguration().get(MeanJob.CONF_NAME_MEASUREMENT);
         int measurementTokenIndex;
         for(measurementTokenIndex = 0; measurementTokenIndex < Constants.FIELDS.length; measurementTokenIndex++) {
             if (Constants.FIELDS[measurementTokenIndex].equals(measurement)) {
@@ -27,16 +28,14 @@ class LeastSquareMapper extends Mapper<LongWritable, Text, DoubleWritable, Doubl
                 return;
             }
 
-            double dataLong = Double.parseDouble(tokens[2]);
-            DoubleWritable date = new DoubleWritable(dataLong);
-
+            Text tokenKey = new Text(measurement);
             double measureLong = Double.parseDouble(tokens[measurementTokenIndex]);
-            DoubleWritable measure = new DoubleWritable(measureLong);
+            DoubleWritable tokenValue = new DoubleWritable(measureLong);
 
             if (Utils.getInvalidData(measurement) != measureLong) {
-                context.write(date, measure);
+                context.write(tokenKey, tokenValue);
             }
-            System.out.println("<" + date + ", " + measure + ">");
+            System.out.println("<" + measurement + ", " + measureLong + ">");
         }
     }
 }

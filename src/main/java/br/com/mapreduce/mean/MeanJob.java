@@ -1,6 +1,5 @@
 package br.com.mapreduce.mean;
 
-import br.com.mapreduce.StatisticMapper;
 import br.com.mapreduce.Constants;
 import br.com.mapreduce.Utils;
 import br.com.mapreduce.dategrep.DateGrepJob;
@@ -23,7 +22,7 @@ public class MeanJob extends Configured implements Tool{
     public static final String NAME = "Mean";
     private static final int RESULT_CODE_FAILED = 0;
     public static final int RESULT_CODE_SUCCESS = 1;
-    static final String CONF_NAME_MEASUREMENT = "CONF_NAME_MEASUREMENT";
+    public static final String CONF_NAME_MEASUREMENT = "CONF_NAME_MEASUREMENT";
     private String mDateGrepTempDir;
     private String mStationGrepTempDir;
 
@@ -65,7 +64,7 @@ public class MeanJob extends Configured implements Tool{
         FileInputFormat.setInputPaths(meanJob, new Path(inputPath));
         FileOutputFormat.setOutputPath(meanJob, new Path(outputPath));
 
-        meanJob.setMapperClass(StatisticMapper.class);
+        meanJob.setMapperClass(MeanMapper.class);
         meanJob.setReducerClass(MeanReducer.class);
 
         meanJob.setOutputKeyClass(Text.class);

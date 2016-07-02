@@ -15,7 +15,7 @@ import java.util.zip.GZIPInputStream;
 public class Utils {
     private static Map<String, Double> dadosInvalidos;
 
-    public Utils() {
+    public static void inicializaDadosInvalidos() {
         dadosInvalidos = new HashMap<String, Double>();
         dadosInvalidos.put("TEMP", 9999.9);
         dadosInvalidos.put("DEWP", 9999.9);
@@ -37,26 +37,18 @@ public class Utils {
     }
 
     public static double getInvalidData(String abbreviation) {
+        dadosInvalidos = new HashMap<String, Double>();
+        dadosInvalidos.put("TEMP", 9999.9);
+        dadosInvalidos.put("DEWP", 9999.9);
+        dadosInvalidos.put("SLP", 9999.9);
+        dadosInvalidos.put("STP", 9999.9);
+        dadosInvalidos.put("VISIB", 999.9);
+        dadosInvalidos.put("WDSP", 999.9);
+        dadosInvalidos.put("GUST", 999.9);
+        dadosInvalidos.put("MAX", 9999.9);
+        dadosInvalidos.put("MIN", 9999.9);
+        dadosInvalidos.put("PRCP", 99.99);
+        dadosInvalidos.put("SNDP", 999.9);
         return dadosInvalidos.get(abbreviation);
     }
-
-    public static void gunzip (String inputPath, String outputPath) {
-        byte[] buffer = new byte[1024];
-        try {
-            GZIPInputStream gzis = new GZIPInputStream(new FileInputStream(inputPath));
-            FileOutputStream out = new FileOutputStream(outputPath);
-            int len;
-            while ((len = gzis.read(buffer)) > 0) {
-                out.write(buffer,0,len);
-            }
-            gzis.close();
-            out.close();
-            File file = new File(inputPath);
-            file.delete();
-        }
-        catch (IOException i) {
-            i.printStackTrace();
-        }
-    }
-
 }

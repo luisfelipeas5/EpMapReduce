@@ -9,27 +9,8 @@ import java.io.File;
 public class Main {
     public static void main(String[] args){
         if(args.length > 0) {
+            Utils.inicializaDadosInvalidos();
             String command = args[0];
-            /*File inputRootFolder = new File(args[1]);
-            String[] listFiles = inputRootFolder.list();
-            for (String folderName: listFiles) {
-                File folder = new File(args[1]+File.separator+folderName);
-                System.out.println("Unzipping files...");
-                System.out.println("Unzipping files...");
-                System.out.println("Unzipping files...");
-                if (folder.isDirectory()) {
-                    String[] subFiles = folder.list();
-                    for (String subFileName : subFiles) {
-                        String[] splittedName = subFileName.split("\\.");
-                        if (splittedName.length == 3 && splittedName[2].equals("gz")) {
-                            String input = args[1]+"/"+folderName+"/"+splittedName[0]+"."+splittedName[1]+"."+splittedName[2];
-                            String output = args[1]+"/"+folderName+"/"+splittedName[0]+"."+splittedName[1];
-                            Utils.gunzip(input,output);
-                        }
-                    }
-                }
-            }*/
-            args[1] = args[1]+File.separator+"*"+File.separator+"*";
             if (command.equals(Constants.COMMAND_LEAST_SQUARE)) {
                 runLeastSquare(args);
             }

@@ -1,6 +1,5 @@
 package br.com.mapreduce.stddeviation;
 
-import br.com.mapreduce.StatisticMapper;
 import br.com.mapreduce.Constants;
 import br.com.mapreduce.Utils;
 import br.com.mapreduce.dategrep.DateGrepJob;
@@ -69,7 +68,7 @@ public class StdDeviationJob extends Configured implements Tool {
         FileInputFormat.setInputPaths(stdDevJob, new Path(inputPath));
         FileOutputFormat.setOutputPath(stdDevJob, new Path(outputPath));
 
-        stdDevJob.setMapperClass(StatisticMapper.class);
+        stdDevJob.setMapperClass(StdDeviationMapper.class);
         stdDevJob.setReducerClass(StdDeviationReducer.class);
 
         stdDevJob.setOutputKeyClass(Text.class);
